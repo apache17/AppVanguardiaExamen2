@@ -28,7 +28,7 @@ class Home extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      search: '',
+      key: '',
     };
   }
 
@@ -42,13 +42,13 @@ class Home extends React.Component {
         <TextInput
           style={styles.textInput}
           placeholder={'search'}
-          onChangeText={(txt) => this.setState({search: txt})}
-          value={this.state.search}
+          onChangeText={(txt) => this.setState({key: txt})}
+          value={this.state.key}
         />
         <Button
           style={styles.button}
           title="Button"
-          onPress={ () => this.props.navigation.navigate('ListS',{keywords: this.state.search})}
+          onPress={ () => this.props.navigation.navigate('ListS',{keywords: this.state.key})}
         />
       </View>
     );
@@ -64,7 +64,7 @@ class List extends React.Component {
     super(props);
     this.state = {
       keywords: this.props.navigation.getParam('keywords', ''),
-      jobs: []
+      array: []
     }
   }
 
@@ -76,23 +76,22 @@ class List extends React.Component {
     axios
       .get(`https://jobs.github.com/positions.json?search=${this.state.keywords}`)
       .then(resp => {
-        this.setState({jobs: resp.data});
+        this.setState({array: resp.data});
       })
-      .catch(err => {console.warn(err.message);})
   }
 
   render() {
     return (
       <View style={{flex: 1,alignItems: "center",justifyContent: "center" }}>
-        <ScrollView contentContainerStyle={{paddingVertical: 20,width: 400}}>{this.state.jobs.map((job) =>
+        <ScrollView contentContainerStyle={{paddingVertical: 20,width: 400}}>{this.state.array.map((data) =>
           <TouchableOpacity 
             style={styles.box} 
-            key={job.id}
-            onPress={ () => this.props.navigation.navigate('DetailS',{job: job})}
+            key={data.id}
+            onPress={ () => this.props.navigation.navigate('DetailS',{data: data})}
           >
-            <Text style={{fontSize: 18,fontWeight: 'bold'}}>{job.title}</Text>
-            <Text style={{fontSize: 16}}>{job.company}</Text>
-            <Text style={{fontSize: 14,color:'gray'}}>{job.type}</Text>
+            <Text style={{fontSize: 18,fontWeight: 'bold'}}>{data.title}</Text>
+            <Text style={{fontSize: 16}}>{data.company}</Text>
+            <Text style={{fontSize: 14,color:'gray'}}>{data.type}</Text>
           </TouchableOpacity>
           )}
         </ScrollView>
@@ -109,7 +108,7 @@ class Detail extends React.Component {
 
   constructor(props){
     super(props);
-    let temp = this.props.navigation.getParam('job', '');
+    let temp = this.props.navigation.getParam('data', '');
     let desc = temp.description.replace(regex, '');
     this.state = {
       job: temp,
@@ -141,9 +140,7 @@ class Detail extends React.Component {
 
 const AppNavigator = createStackNavigator(
   {
-    HomeS: Home,
-    ListS: List,
-    DetailS: Detail
+    HomeS: Home,ListS: List,DetailS: Detail
   },
   {
     initialRouteName: "HomeS"
@@ -151,20 +148,15 @@ const AppNavigator = createStackNavigator(
 );
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   textInput: {
     height:40,
     width:280,
     borderColor: 'transparent',
     backgroundColor: '#f1f4f3',
-    borderWidth: 1,
+    textAlign:'center',
     marginHorizontal:20,
     paddingHorizontal:10,
     marginBottom:30,
-    textAlign:'center',
   },
   button: {
     height: 30,
@@ -174,10 +166,10 @@ const styles = StyleSheet.create({
   box: {
     height: 100,
     width: 350,
-    alignSelf:'center',
     borderBottomWidth: 1,
-    borderColor: 'black',
+    alignSelf:'center',
     paddingVertical: 20,
+    borderColor: 'black',
   },
 });
 
