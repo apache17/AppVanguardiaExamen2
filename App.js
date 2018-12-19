@@ -46,8 +46,9 @@ class Home extends React.Component {
           value={this.state.key}
         />
         <Button
-          style={styles.button}
+          style={{height: 30,width: 50}}
           title="Button"
+          color="#435650"
           onPress={ () => this.props.navigation.navigate('ListS',{keywords: this.state.key})}
         />
       </View>
@@ -111,8 +112,7 @@ class Detail extends React.Component {
     let temp = this.props.navigation.getParam('data', '');
     let desc = temp.description.replace(regex, '');
     this.state = {
-      job: temp,
-      description: desc,
+      info: temp,description: desc,
     }
   }
 
@@ -121,13 +121,13 @@ class Detail extends React.Component {
       <View style={{flex: 1,alignItems: "center",justifyContent: "center",width:400}}>
         <ScrollView contentContainerStyle={{paddingVertical: 20,width: 380}}>
           <Text style={{fontSize: 20,fontWeight: 'bold',marginBottom:15}}>
-            {this.state.job.title}
+            {this.state.info.title}
           </Text>
           <Text style={{fontSize: 18,fontWeight: 'bold',marginBottom:15}}>
-            {this.state.job.company}
+            {this.state.info.company}
           </Text>
           <Text style={{fontSize: 16,fontWeight: 'bold',marginBottom:15}}>
-            {this.state.job.type}
+            {this.state.info.type}
           </Text>
           <Text style={{fontSize: 15,marginBottom:15}}>
             {this.state.description}
@@ -157,11 +157,6 @@ const styles = StyleSheet.create({
     marginHorizontal:20,
     paddingHorizontal:10,
     marginBottom:30,
-  },
-  button: {
-    height: 30,
-    width: 100,
-    backgroundColor: '#435650',
   },
   box: {
     height: 100,
